@@ -1,0 +1,20 @@
+<!-- <div>
+    <label for="username">ユーザー名</label>
+    <input id="username" [(ngModel)]="username" type="text">
+  
+    <label for="password">パスワード</label>
+    <input id="password" [(ngModel)]="password" type="password">
+  
+    <button (click)="onSubmitLogin()">ログイン</button>
+</div> -->
+
+<h2>ログイン</h2>
+<div class="login">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmitLogin(loginForm.value)">
+        <label>ユーザーID: </label>
+        <input formControlName="userId">
+        <label>パスワード: </label>
+        <input type="password" formControlName="password">
+        <button type="submit">ログイン</button>
+    </form>
+</div>

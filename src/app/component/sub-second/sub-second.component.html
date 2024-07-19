@@ -1,0 +1,47 @@
+<div class="root">
+    <div class="upper-container">
+        <button nz-button nzType="primary">secondary</button>
+        <button nz-button nz-dropdown [nzDropdownMenu]="menu">
+            Actions
+            <span nz-icon nzType="down"></span>
+        </button>
+        <nz-dropdown-menu #menu="nzDropdownMenu">
+            <ul nz-menu>
+              <li nz-menu-item>
+                <a>1st item</a>
+              </li>
+              <li nz-menu-item>
+                <a>2nd item</a>
+              </li>
+              <li nz-menu-item>
+                <a>3rd item</a>
+              </li>
+            </ul>
+        </nz-dropdown-menu>
+    </div>
+    <div class="table-container">
+        <nz-table #nzTable [nzData]="listOfData" nzTableLayout="fixed">
+            <thead>
+                <tr>
+                    <th nzWidth="60px"></th>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let data of nzTable.data">
+                    <tr (click)="onRowClick(data)">
+                        <td [nzExpand]="expandSet.has(data.id)" (nzExpandChange)="onExpandChange(data.id, $event)"></td>
+                        <td>{{ data.name }}</td>
+                        <td>{{ data.age }}</td>
+                        <td>{{ data.address }}</td>
+                    </tr>
+                    <tr [nzExpand]="expandSet.has(data.id)">
+                        <span>{{ data.description }}</span>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </nz-table>
+    </div>
+</div>

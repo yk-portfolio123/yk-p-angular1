@@ -1,0 +1,19 @@
+.nav_menu{
+    .contents{
+        display: flex;
+    }
+}
+.content {
+    position: relative;
+  }
+  
+  .popup-content {
+    position: absolute;
+    top: 50px; /* Adjust as needed */
+    left: 50px; /* Adjust as needed */
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    z-index: 1000; /* Ensure the popup is above other content */
+  }
+  

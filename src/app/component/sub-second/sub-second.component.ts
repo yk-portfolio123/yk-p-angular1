@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 interface DataItem {
   id: number;
@@ -7,13 +7,11 @@ interface DataItem {
 }
 
 @Component({
-  selector: 'app-main',
-  templateUrl: './main.component.html',
-  styleUrls: ['./main.component.scss']
+  selector: 'app-sub-second',
+  templateUrl: './sub-second.component.html',
+  styleUrls: ['./sub-second.component.scss']
 })
-export class MainComponent implements OnInit{
-  ngOnInit() {
-  }
+export class SubSecondComponent {
   expandSet = new Set<number>();
   onExpandChange(id: number, checked: boolean): void {
     if (checked) {

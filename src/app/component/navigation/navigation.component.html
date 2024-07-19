@@ -1,1 +1,47 @@
-<p>navigation works!</p>
+<div #parent class="nav_menu" *ngFor="let menuItem of displayNavMenuList">
+    <div class="contents" [ngClass]="selectCheck(menuItem)">
+        <div *ngIf="menuItem.child.length <= 1" (click)="onClickParentMenu(menuItem)" style="display: flex;align-items: center;">
+            <!-- <glyph class="itemglyph ps-h-margin-r-s-" key="{{menuItem.key}}"></glyph> -->
+            <span [ngClass]="getIconClass(menuItem.key)"></span> <!-- ハートアイコン -->
+
+            <div class="menuTxt">{{ menuItem.label | translate }}</div>
+        </div>
+        <div *ngIf="menuItem.child.length >= 2" (click)="onShowChildMenu(menuItem.kind)" style="display: flex;align-items: center;">
+            <!-- <glyph class="itemglyph ps-h-margin-r-s-" key="{{menuItem.key}}"></glyph> -->
+            <span [ngClass]="getIconClass(menuItem.key)"></span>
+            <div class="menuTxt">{{ menuItem.label | translate }}</div>
+        </div>
+        <span class="fa fa-angle-down"></span>
+        <!-- <glyph class="glyph arrow" (click)="onShowChildMenu(menuItem.kind)" fontSize="16px" key="downarrowhead" *ngIf="menuItem.child.length > 0"></glyph> -->
+    </div>
+    <kendo-popup [anchor]="parent" *ngIf="showChildMenu(menuItem.kind)">
+        <ng-container *ngFor="let item of menuItem.child">
+            <label class="child-menu" [ngStyle]="{'display': 'block', 'white-space': 'nowrap'}" (click)="onClickChildMenu(item,menuItem)">{{item.label | translate}} </label>
+        </ng-container>
+    </kendo-popup>
+</div>
+<button kendoButton themeColor="primary" (click)="openDialogForm()">
+    User form
+</button>
+<ng-template kendoDialogContainer>
+</ng-template>
+<!-- <div class="test">
+    <kendo-menu [animate]="false" [openOnClick]="{ toggle: 'click' }" size="large">
+        <kendo-menu-item>
+            <ng-template kendoMenuItemTemplate let-item="item">
+                aaa
+            </ng-template>
+
+            <kendo-menu-item url="https://www.telerik.com/">
+                <ng-template kendoMenuItemTemplate let-item="item">
+                    Adjust User Permissions 
+                </ng-template>
+            </kendo-menu-item>
+            <kendo-menu-item url="https://google.com">
+                <ng-template kendoMenuItemTemplate let-item="item">
+                    <span>Remove Team Member</span>
+                </ng-template> 
+            </kendo-menu-item>
+        </kendo-menu-item>
+    </kendo-menu>
+</div> -->

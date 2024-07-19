@@ -1,0 +1,10 @@
+{
+    "NAVIGATION":{
+        "ORDER":"受注",
+        "SCHEDULE":"スケジュール",
+        "STATUS":"ステータス",
+        "WORK":"作業",
+        "HISTORY":"履歴",
+        "DASHBOARD":"ダッシュボード"
+    }
+}

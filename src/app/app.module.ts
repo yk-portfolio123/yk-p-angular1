@@ -44,6 +44,7 @@ import { NgZorroAntdModule } from './ng-zorro-antd.module';
 import { SubFirstComponent } from './component/sub-first/sub-first.component';
 import { SubSecondComponent } from './component/sub-second/sub-second.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { SubThirdComponent } from './component/sub-third/sub-third.component';
 registerLocaleData(ja);
 
 @NgModule({
@@ -56,7 +57,8 @@ registerLocaleData(ja);
     GlyphComponent,
     SystemSettingComponent,
     SubFirstComponent,
-    SubSecondComponent
+    SubSecondComponent,
+    SubThirdComponent
   ],
   imports: [
     BrowserModule,

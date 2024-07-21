@@ -4,7 +4,9 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
+:root {
+  color-scheme: dark;
+}
 .app-layout {
   height: 100vh;
 }
@@ -65,16 +67,16 @@ nz-header {
   position: relative;
   height: 64px;
   padding: 0;
-  background: #fff;
+  background: #001529;
   box-shadow: 0 1px 4px rgba(0,21,41,.08);
 }
 
 nz-content {
-  margin: 24px;
+  margin-left: 3px;
 }
 
 .inner-content {
-  padding: 24px;
+  padding: 10px;
   background: #fff;
   height: 100%;
   background: #1f1f1f;

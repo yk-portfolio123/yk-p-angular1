@@ -1,105 +1,50 @@
 
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, AfterViewInit, ElementRef, ViewChild, HostListener } from '@angular/core';
+import * as joint from 'jointjs';
+import { listOfData, customColumn, gridData, CustomColumn, fa } from '../../lib/glyph/mock-data';
+import { GraphService } from 'src/app/service/graph.service';
 
-interface Person {
-  key: string;
-  name: string;
-  gender: 'male' | 'female';
-  age: number;
-  address: string;
-  [key: string]: any;
-}
-
-interface CustomColumn{
-  name: string;
-  value: string;
-  default: boolean;
-  required?: boolean;
-  position?: 'left' | 'right';
-  width?: number;
-  fixWidth?: boolean;
-}
 @Component({
   selector: 'app-sub-first',
   templateUrl: './sub-first.component.html',
   styleUrls: ['./sub-first.component.scss']
 })
-export class SubFirstComponent implements OnInit {
-  listOfData: Person[] = [
-    {
-      key: '1',
-      name: 'John Brown',
-      gender: 'female',
-      age: 32,
-      address: 'New York No. 1 Lake Park'
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      gender: 'female',
-      age: 42,
-      address: 'London No. 1 Lake Park'
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
-      gender: 'male',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park'
-    }
-  ];
+export class SubFirstComponent implements OnInit, AfterViewInit {
+  @ViewChild('paperContainer', { static: true })
+  paperContainer!: ElementRef;
+  private paper!: joint.dia.Paper;
+  private graph = new joint.dia.Graph({}, { cellNamespace: joint.shapes });
+  // listOfData: VirtualDataInterface[] = [];
 
-  customColumn: CustomColumn[] = [
-    {
-      name: 'Name',
-      value: 'name',
-      default: true,
-      required: true,
-      position: 'left',
-      width: 200
-    },
-    {
-      name: 'Gender',
-      value: 'gender',
-      default: true,
-      width: 200
-    },
-    {
-      name: 'Address',
-      value: 'address',
-      default: true,
-      width: 200
-    },
-    {
-      name: 'Age',
-      value: 'age',
-      default: true,
-      width: 200
-    },
-    {
-      name: 'Action',
-      value: 'action',
-      default: true,
-      required: true,
-      position: 'right',
-      width: 200
-    }
-  ];
-
+  widthConfig:string[] = [];
+  listOfData = listOfData;
+  customColumn = customColumn;
   isVisible: boolean = false;
   title: CustomColumn[] = [];
   footer: CustomColumn[] = [];
   fix: CustomColumn[] = [];
   notFix: CustomColumn[] = [];
+  visibleColumns: CustomColumn[] = [];
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  selectedRowId: number | null = null;
 
+  constructor(private cdr: ChangeDetectorRef,private graphService: GraphService) {}
+  trackByIndex(_: number, data: gridData): number {
+    return data.id;
+  }
   ngOnInit(): void {
     this.title = this.customColumn.filter(item => item.position === 'left' && item.required);
     this.footer = this.customColumn.filter(item => item.position === 'right' && item.required);
     this.fix = this.customColumn.filter(item => item.default && !item.required);
     this.notFix = this.customColumn.filter(item => !item.default && !item.required);
+    this.visibleColumns = [...this.title, ...this.fix, ...this.footer];
+    this.visibleColumns.forEach((column) => {this.widthConfig.push(column.width)});
+  }
+  ngAfterViewInit(): void{
+    //this.workflow();
+    this.initializePaper();
+    this.adjustPaperSize();
   }
 
   drop(event: CdkDragDrop<CustomColumn[]>): void {
@@ -116,6 +61,7 @@ export class SubFirstComponent implements OnInit {
       item.default = false;
       return item;
     });
+    this.visibleColumns = [...this.title, ...this.fix, ...this.footer];
     this.cdr.markForCheck();
   }
 
@@ -123,6 +69,7 @@ export class SubFirstComponent implements OnInit {
     value.default = false;
     this.notFix = [...this.notFix, value];
     this.fix.splice(index, 1);
+    this.visibleColumns = [...this.title, ...this.fix, ...this.footer];
     this.cdr.markForCheck();
   }
 
@@ -130,6 +77,7 @@ export class SubFirstComponent implements OnInit {
     value.default = true;
     this.fix = [...this.fix, value];
     this.notFix.splice(index, 1);
+    this.visibleColumns = [...this.title, ...this.fix, ...this.footer];
     this.cdr.markForCheck();
   }
 
@@ -139,11 +87,81 @@ export class SubFirstComponent implements OnInit {
 
   handleOk(): void {
     this.customColumn = [...this.title, ...this.fix, ...this.notFix, ...this.footer];
+    this.visibleColumns = [...this.title, ...this.fix, ...this.footer];
     this.isVisible = false;
     this.cdr.markForCheck();
+    this.widthConfig = [];
+    this.visibleColumns.forEach((column) => {this.widthConfig.push(column.width)});
   }
 
   handleCancel(): void {
     this.isVisible = false;
+  }
+  @HostListener('window:resize')
+  onResize() {
+    // this.adjustTableWidth();
+    this.adjustPaperSize();
+  }
+  private initializePaper() {
+    
+    this.graph.on('change:position', (cell) => {
+      const bbox = {
+        width: this.paper.el.clientWidth,
+        height: this.paper.el.clientHeight
+      };
+      const nodeBBox = cell.getBBox();
+    
+      const maxX = bbox.width - nodeBBox.width;
+      const maxY = bbox.height - nodeBBox.height;
+    
+      const x = Math.max(0, Math.min(cell.get('position').x, maxX));
+      const y = Math.max(0, Math.min(cell.get('position').y, maxY));
+    
+      cell.set('position', { x, y });
+    });
+    const paperElement = this.paperContainer.nativeElement.querySelector('#paper');
+    const container = this.paperContainer.nativeElement;
+    this.paper = new joint.dia.Paper({
+      el: paperElement,
+      model: this.graph,
+      width: container.offsetWidth,
+      height: container.offsetHeight,
+      gridSize: 10,
+      drawGrid: true,
+      background: { color: '#141414' },
+      interactive: (cellView: any) => {
+        const model = cellView.model;
+        if (model.isElement()) {
+          const element = model as joint.dia.Element;
+          return !element.attr('nonEditable'); // Check for non-editable attribute
+        }
+        return true;
+      }
+    });
+
+    //this.graphService.createRectangle(this.graph);
+    
+  }
+
+  private adjustPaperSize() {
+    if (this.paper) {
+      const container = this.paperContainer.nativeElement;
+      this.paper.setDimensions(container.offsetWidth, container.offsetHeight);
+    }
+  }
+
+  columnTrackBy(index: number, item: any) {
+    return item.key;
+  }
+
+  onRowClick(data: any): void {
+    // this.selectedRow = data;
+    this.graphService.createRectangle(this.graph,data.id);
+    this.graphService.createRectangle(this.graph,data.id);
+    this.selectedRowId = data.id;
+    console.log('Selected Row:', data);
+  }
+  isRowSelected(data: any): boolean {
+    return this.selectedRowId === data.id;
   }
 }

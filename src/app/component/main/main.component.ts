@@ -1,10 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
-interface DataItem {
-  id: number;
-  name: string;
-  age: number;
-}
+import * as joint from 'jointjs';
 
 @Component({
   selector: 'app-main',
@@ -13,43 +8,63 @@ interface DataItem {
 })
 export class MainComponent implements OnInit{
   ngOnInit() {
-  }
-  expandSet = new Set<number>();
-  onExpandChange(id: number, checked: boolean): void {
-    if (checked) {
-      this.expandSet.add(id);
-    } else {
-      this.expandSet.delete(id);
-    }
-  }
-  listOfData = [
-    {
-      id: 1,
-      name: 'John Brown',
-      age: 32,
-      expand: false,
-      address: 'New York No. 1 Lake Park',
-      description: 'My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park.'
-    },
-    {
-      id: 2,
-      name: 'Jim Green',
-      age: 42,
-      expand: false,
-      address: 'London No. 1 Lake Park',
-      description: 'My name is Jim Green, I am 42 years old, living in London No. 1 Lake Park.'
-    },
-    {
-      id: 3,
-      name: 'Joe Black',
-      age: 32,
-      expand: false,
-      address: 'Sidney No. 1 Lake Park',
-      description: 'My name is Joe Black, I am 32 years old, living in Sidney No. 1 Lake Park.'
-    }
-  ];
-  onRowClick(data: DataItem): void {
-    // this.selectedRow = data;
-    console.log('Selected Row:', data);
+    // const graph = new joint.dia.Graph();
+    // const paperElement = document.getElementById('paper');
+    // if (!paperElement) {
+    //   throw new Error("Paper element not found");
+    // }
+    // const paper = new joint.dia.Paper({
+    //   el: paperElement,
+    //   model: graph,
+    //   width: 800,
+    //   height: 600,
+    //   gridSize: 10,
+    //   drawGrid: true,
+    //   background: { color: 'white' },
+    //   interactive: (cellView: any) => {
+    //     const model = cellView.model;
+    //     if (model.isElement()) {
+    //       const element = model as joint.dia.Element;
+    //       return !element.attr('nonEditable'); // 編集不可のチェック
+    //     }
+    //     return true;
+    //   }
+    // });
+
+    // // ノードの作成
+    // const rect = new joint.shapes.standard.Rectangle();
+    // rect.position(100, 100);
+    // rect.resize(100, 40);
+    // rect.attr({
+    //   body: {
+    //     fill: 'blue'
+    //   },
+    //   label: {
+    //     text: 'Editable',
+    //     fill: 'white'
+    //   }
+    // });
+    // rect.addTo(graph);
+
+    // const rectNonEditable = new joint.shapes.standard.Rectangle();
+    // rectNonEditable.position(300, 100);
+    // rectNonEditable.resize(100, 40);
+    // rectNonEditable.attr({
+    //   body: {
+    //     fill: 'red'
+    //   },
+    //   label: {
+    //     text: 'Non-Editable',
+    //     fill: 'white'
+    //   }
+    // });
+    // rectNonEditable.attr('nonEditable', true); // 編集不可属性の追加
+    // rectNonEditable.addTo(graph);
+
+    // // ノード間のリンクを作成
+    // const link = new joint.shapes.standard.Link();
+    // link.source(rect);
+    // link.target(rectNonEditable);
+    // link.addTo(graph);
   }
 }

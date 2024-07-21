@@ -1,25 +1,32 @@
-<button nz-button nzType="primary" nzSize="small" (click)="showModal()" style="margin-bottom: 8px;">
-    <span nz-icon nzType="setting" nzTheme="outline"></span>
-  </button>
-  <nz-table #basicTable [nzData]="listOfData">
-    <thead>
-      <tr>
-        <th *ngFor="let column of title" [ngStyle]="{ width: column.width + 'px' }">{{ column.name }}</th>
-        <th *ngFor="let column of fix" [ngStyle]="{ width: column.width + 'px' }">{{ column.name }}</th>
-        <th *ngFor="let column of footer" [ngStyle]="{ width: column.width + 'px' }">{{ column.name }}</th>
-        <th *ngFor="let column of notFix" [ngStyle]="{ width: column.width + 'px' }">{{ column.name }}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let data of basicTable.data">
-        <td *ngFor="let column of title">{{ data[column.value] }}</td>
-        <td *ngFor="let column of fix">{{ data[column.value] }}</td>
-        <td *ngFor="let column of footer">{{ data[column.value] }}</td>
-        <td *ngFor="let column of notFix">{{ data[column.value] }}</td>
-      </tr>
-    </tbody>
-  </nz-table>
-
+<div class="root">
+  <div class="grid">
+    <button nz-button nzType="primary" nzSize="small" (click)="showModal()" style="margin-bottom: 8px;">
+        <span nz-icon nzType="setting" nzTheme="outline"></span>
+    </button>
+    <div class="table-container">
+      <nz-table
+        #basicTable
+        nzVirtualScroll
+        class="nz-table-container"
+        [nzData]="listOfData"
+        [nzFrontPagination]="false"
+        [nzShowPagination]="false"
+        [nzWidthConfig]="widthConfig"
+        [nzScroll]="{ y: '300px' }"
+        nzSize="small">
+        <thead>
+          <tr class="sticky-header">
+            <th *ngFor="let column of visibleColumns" nzEllipsis>{{ column.name }}</th>
+          </tr>
+        </thead>
+        <tbody class="scrollable-tbody">
+          <tr *ngFor="let data of basicTable.data"  (click)="onRowClick(data)">
+            <td *ngFor="let column of visibleColumns" nzEllipsis [ngClass]="{'selected-row': data.id === selectedRowId}">{{ data[column.value] }}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
   <nz-modal [(nzVisible)]="isVisible" nzTitle="Custom Column" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
     <ng-container *nzModalContent>
       <div nz-row [nzGutter]="24">
@@ -67,4 +74,8 @@
         </div>
       </div>
     </ng-container>
-</nz-modal>
+  </nz-modal>
+  <div id="paper-container" #paperContainer>
+    <div id="paper"></div>
+  </div>
+</div>

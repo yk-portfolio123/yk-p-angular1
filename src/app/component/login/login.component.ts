@@ -44,7 +44,7 @@ export class LoginComponent implements OnInit {
     this.auth.login(userId, password)
       .then((result) => {
         this.router.navigate(['/main']);
-        // 任意のログイン後の処理(マイページへの遷移など)
+        window.location.reload();
       }).catch((err) => {
         console.log(err);
       });

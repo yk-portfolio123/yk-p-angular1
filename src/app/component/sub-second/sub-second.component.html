@@ -19,29 +19,54 @@
             </ul>
         </nz-dropdown-menu>
     </div>
-    <div class="table-container">
-        <nz-table #nzTable [nzData]="listOfData" nzTableLayout="fixed">
-            <thead>
-                <tr>
-                    <th nzWidth="60px"></th>
-                    <th>Name</th>
-                    <th>Age</th>
-                    <th>Address</th>
-                </tr>
-            </thead>
-            <tbody>
-                <ng-container *ngFor="let data of nzTable.data">
-                    <tr (click)="onRowClick(data)">
-                        <td [nzExpand]="expandSet.has(data.id)" (nzExpandChange)="onExpandChange(data.id, $event)"></td>
-                        <td>{{ data.name }}</td>
-                        <td>{{ data.age }}</td>
-                        <td>{{ data.address }}</td>
-                    </tr>
-                    <tr [nzExpand]="expandSet.has(data.id)">
-                        <span>{{ data.description }}</span>
-                    </tr>
-                </ng-container>
-            </tbody>
-        </nz-table>
+    <div class="grid">
+        <nz-table
+        #basicTable
+        nzVirtualScroll
+        class="nz-table-container"
+        [nzData]="listOfData"
+        [nzFrontPagination]="false"
+        [nzShowPagination]="false"
+        [nzWidthConfig]="widthConfig"
+        [nzScroll]="{ y: 'calc(100vh - 220px)' }"
+        nzSize="small">
+        <thead>
+          <tr class="sticky-header">
+            <th *ngFor="let column of customColumn" nzEllipsis>{{ column.name }}</th>
+            <th nzRight></th>
+          </tr>
+        </thead>
+        <tbody class="scrollable-tbody">
+          <tr *ngFor="let data of basicTable.data">
+            <td *ngFor="let column of customColumn" nzEllipsis>{{ data[column.value] }}</td>
+            <td nzRight>
+            <a (click)="showModal(data)">Detail</a>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
     </div>
 </div>
+<nz-modal [(nzVisible)]="isVisible" nzTitle="Detail" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" nzWrapClassName="custom-modal">
+    <ng-container *nzModalContent>
+      <!-- <h2>{{ modalData.id }}</h2>
+      <p>{{ modalData.name }}</p> -->
+      <div class="detail-table-container">
+        <nz-table [nzData]="modalData" [nzBordered]="true" [nzScroll]="{ x: 'max-content', y: 'calc(100vh - 200px)' }"
+        [nzFrontPagination]="false" [nzShowPagination]="false">
+          <thead>
+            <tr>
+              <th></th> <!-- 空のセル (縦と横の交差点) -->
+              <th *ngFor="let column of columns">{{ column }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of modalData; let i = index">
+              <td>{{ i + 1 }}</td> <!-- 縦方向のヘッダー -->
+              <td *ngFor="let column of columns">{{ row[column] }}</td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </div>
+    </ng-container>
+</nz-modal>

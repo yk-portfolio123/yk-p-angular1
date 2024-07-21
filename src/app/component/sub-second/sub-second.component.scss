@@ -1,0 +1,47 @@
+  /* ------------------------------scroll-bar-custom------------------------------ */
+  :host ::ng-deep nz-table {
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #555555;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #333333;
+    }
+    ::-webkit-scrollbar-corner {
+      background: #000000;
+    }
+  }
+  
+  /* ------------------------------modal------------------------------ */
+  ::ng-deep .custom-modal .ant-modal {
+    top: 50px !important;
+    height: calc(100vh - 100px) !important; /* 50pxの上下マージンを考慮 */
+    overflow: hidden;
+  }
+  
+  ::ng-deep .custom-modal .ant-modal-body {
+    height: calc(100vh - 200px) !important;
+  }
+  
+  .detail-table-container nz-table tbody td:first-child {
+    font-weight: bold;
+    background-color: #272727; /* 縦方向のヘッダーの背景色 */
+  }
+  
+  .detail-table-container {
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  .detail-table-container nz-table {
+    height: 100%;
+  }
+  
+  ::ng-deep .detail-table-container nz-table .ant-table-body {
+    max-height: calc(100vh - 260px) !important; /* さらにヘッダーとフッターの高さを考慮 */
+    overflow-y: auto;
+  }
